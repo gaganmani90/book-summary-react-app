@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table } from 'react-bootstrap';
 import { Container, Row, Col } from 'react-bootstrap';
+import {Link} from "react-router-dom";
 
 export interface Profile {
     // define the response data types here
@@ -60,7 +61,7 @@ const ProfileTable = (props) => {
                 <tbody>
                 {data.map((item: Profile, index: number) => (
                     <tr key={index}>
-                        <td>{item._id}</td>
+                        <td><Link to={`/profiles/${item._id}`}>{item._id}</Link></td>
                         <td>{item.age}</td>
                         <td>{item.gender}</td>
                         <td>{item.email}</td>

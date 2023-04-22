@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import ProfilesView, {Profile} from "./ProfilesView";
 import {Profiler} from "inspector";
-import {Modal} from "react-bootstrap";
+import {Alert, Modal} from "react-bootstrap";
 
 
 // @ts-ignore
@@ -15,9 +15,9 @@ const ProfileForm = ({display}) => {
     const [gender, setGender] = useState('')
     const [showModal, setShowModal] = useState(display);
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         const form = event.currentTarget;
-        if (form.checkValidity() === false) {
+        if (!form.checkValidity()) {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -26,6 +26,26 @@ const ProfileForm = ({display}) => {
         }
         setValidated(true);
         console.log(JSON.stringify(profile))
+
+
+        try {
+            const response = await fetch('http://localhost:8080/profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(profile)
+            });
+
+            if (!response.ok) {
+                throw new Error('HTTP error ' + response.status);
+            }
+
+            console.log('Form data submitted successfully');
+        } catch (error) {
+            // @ts-ignore
+            console.log('Error submitting form data:', error.message);
+        }
         setShowModal(false);
     };
 
@@ -74,6 +94,11 @@ const ProfileForm = ({display}) => {
                     </Form>
                 </Modal.Body>
             </Modal>
+            {!showModal && (
+                <Alert variant="success">
+                    Form data submitted successfully!
+                </Alert>
+            )}
         </>
     );
 }
