@@ -72,7 +72,7 @@ function ProfileForm() {
                 <Button type="submit">Go</Button>
 
             </Form>
-            {api && <ProfilesView data={data}/>}
+            {data && <ProfilesView data={data}/>}
         </>
     );
 }
