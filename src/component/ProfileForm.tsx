@@ -5,12 +5,15 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import ProfilesView, {Profile} from "./ProfilesView";
 import {Profiler} from "inspector";
+import {Modal} from "react-bootstrap";
 
 
-function ProfileForm() {
+// @ts-ignore
+const ProfileForm = ({display}) => {
     const [validated, setValidated] = useState(false);
     const [age, setAge] = useState<number | null>(null);
     const [gender, setGender] = useState('')
+    const [showModal, setShowModal] = useState(display);
 
     const handleSubmit = (event: any) => {
         const form = event.currentTarget;
@@ -23,6 +26,7 @@ function ProfileForm() {
         }
         setValidated(true);
         console.log(JSON.stringify(profile))
+        setShowModal(false);
     };
 
     const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,26 +47,33 @@ function ProfileForm() {
     // @ts-ignore
     return (
         <>
-            <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="formBasicAge">
-                    <Form.Label>Age</Form.Label>
-                    <Form.Control type="number" placeholder="Enter age" value={age === null ? '' : age} onChange={handleAgeChange} isInvalid={age === null} />
-                    <Form.Control.Feedback type="invalid">Age must be a number between 20 and 65</Form.Control.Feedback>
-                </Form.Group>
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Enter Age and Gender</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group controlId="formBasicAge">
+                            <Form.Label>Age</Form.Label>
+                            <Form.Control type="number" placeholder="Enter age" value={age === null ? '' : age} onChange={handleAgeChange} isInvalid={age === null} />
+                            <Form.Control.Feedback type="invalid">Age must be a number between 0 and 120</Form.Control.Feedback>
+                        </Form.Group>
 
-                <Form.Group controlId="formBasicGender">
-                    <Form.Label>Gender</Form.Label>
-                    <div key={`inline-radio`} className="mb-3">
-                        <Form.Check inline label="Male" name="gender" type="radio" id={`inline-radio-1`} value="male" checked={gender === 'male'} onChange={(e) => setGender(e.target.value)} />
-                        <Form.Check inline label="Female" name="gender" type="radio" id={`inline-radio-2`} value="female" checked={gender === 'female'} onChange={(e) => setGender(e.target.value)} />
-                    </div>
-                    <Form.Control.Feedback type="invalid">Please select a gender</Form.Control.Feedback>
-                </Form.Group>
+                        <Form.Group controlId="formBasicGender">
+                            <Form.Label>Gender</Form.Label>
+                            <div key={`inline-radio`} className="mb-3">
+                                <Form.Check inline label="Male" name="gender" type="radio" id={`inline-radio-1`} value="male" checked={gender === 'male'} onChange={(e) => setGender(e.target.value)} />
+                                <Form.Check inline label="Female" name="gender" type="radio" id={`inline-radio-2`} value="female" checked={gender === 'female'} onChange={(e) => setGender(e.target.value)} />
+                            </div>
+                            <Form.Control.Feedback type="invalid">Please select a gender</Form.Control.Feedback>
+                        </Form.Group>
 
-                <Button variant="primary" type="submit" disabled={!isFormValid()}>
-                    Submit
-                </Button>
-            </Form>
+                        <Button variant="primary" type="submit" disabled={!isFormValid()}>
+                            Submit
+                        </Button>
+                    </Form>
+                </Modal.Body>
+            </Modal>
         </>
     );
 }

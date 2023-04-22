@@ -10,7 +10,7 @@ function RecommendationButton() {
     return (
         <>
             <Button variant="primary" onClick={handleOnClick}>Recommend 5 Books</Button>
-            {showForm && <ProfileForm />}
+            {showForm && <ProfileForm display={true} />}
         </>
     );
 }
