@@ -1,14 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import RecommendationButton from "./component/RecommendationButton";
-import ProfileForm from "./component/ProfileForm";
+import ProfilesView from "./component/ProfilesView";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navigation from "./component/Navigation";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-          <RecommendationButton />
+          <Router>
+              <div>
+                  <Navigation />
+                  <Routes>
+                      <Route path="/" element={<RecommendationButton />} />
+                      <Route path="/profiles" element={<ProfilesView/>} />
+                  </Routes>
+              </div>
+          </Router>
       </header>
     </div>
   );

@@ -3,32 +3,39 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import ProfilesView from "./ProfilesView";
+import ProfilesView, {Profile} from "./ProfilesView";
+import {Profiler} from "inspector";
 
 
 function ProfileForm() {
     const [validated, setValidated] = useState(false);
-    const [api, setApi] = useState(false);
-    const [data, setData] = useState(null)
+    const [age, setAge] = useState<number | null>(null);
+    const [gender, setGender] = useState('')
 
-    useEffect(() => {
-        fetch('http://localhost:8080/profile')
-            .then(response => response.json())
-            .then(json => setData(json))
-            .catch(error => console.error(error));
-    }, []);
-
-    console.log("data: "+JSON.stringify(data))
     const handleSubmit = (event: any) => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
         }
-
+        const profile: { gender: string; age: number | null } = {
+            age, gender
+        }
         setValidated(true);
-        setApi(true)
+        console.log(JSON.stringify(profile))
+    };
 
+    const handleAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newAge = parseInt(e.target.value);
+        if (newAge < 1 || newAge > 65) {
+            setAge(null);
+        } else {
+            setAge(newAge);
+        }
+    };
+
+    const isFormValid = () => {
+        return age !== null && gender !== '';
     };
 
     // @ts-ignore
@@ -36,43 +43,26 @@ function ProfileForm() {
     // @ts-ignore
     return (
         <>
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                <Row className="mb-3">
-                    <Form.Group as={Col} md="4" controlId="age">
-                        <Form.Label>Age</Form.Label>
-                        <Form.Control
-                            required
-                            type="text"
-                            defaultValue="30"
-                        />
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                    </Form.Group>
+            <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="formBasicAge">
+                    <Form.Label>Age</Form.Label>
+                    <Form.Control type="number" placeholder="Enter age" value={age === null ? '' : age} onChange={handleAgeChange} isInvalid={age === null} />
+                    <Form.Control.Feedback type="invalid">Age must be a number between 20 and 65</Form.Control.Feedback>
+                </Form.Group>
 
-                    <Form.Group as={Col} md="4" controlId="gender">
-                        <Form.Label>Gender</Form.Label>
-                        <Form.Check
-                            inline
-                            label="male"
-                            name="group1"
-                            type='radio'
-                            id={`inline-radio-1`}
-                        />
-                        <Form.Check
-                            inline
-                            label="female"
-                            name="group1"
-                            type='radio'
-                            id={`inline-radio-2`}
-                        />
-                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                    </Form.Group>
+                <Form.Group controlId="formBasicGender">
+                    <Form.Label>Gender</Form.Label>
+                    <div key={`inline-radio`} className="mb-3">
+                        <Form.Check inline label="Male" name="gender" type="radio" id={`inline-radio-1`} value="male" checked={gender === 'male'} onChange={(e) => setGender(e.target.value)} />
+                        <Form.Check inline label="Female" name="gender" type="radio" id={`inline-radio-2`} value="female" checked={gender === 'female'} onChange={(e) => setGender(e.target.value)} />
+                    </div>
+                    <Form.Control.Feedback type="invalid">Please select a gender</Form.Control.Feedback>
+                </Form.Group>
 
-                </Row>
-
-                <Button type="submit">Go</Button>
-
+                <Button variant="primary" type="submit" disabled={!isFormValid()}>
+                    Submit
+                </Button>
             </Form>
-            {data && <ProfilesView data={data}/>}
         </>
     );
 }
