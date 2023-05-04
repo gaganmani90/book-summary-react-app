@@ -1,10 +1,10 @@
 import React from 'react';
-import './App.css';
-import RecommendationButton from "./component/RecommendationButton";
-import ProfilesView from "./component/ProfilesView";
-import {BrowserRouter as Router, Routes, Route, useParams} from 'react-router-dom';
+import './styles/App.css';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Navigation from "./component/Navigation";
 import ProfileQueryHistoryTable from "./component/ProfileQueryHistoryTable";
+import {HomePage} from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -14,8 +14,8 @@ function App() {
               <div>
                   <Navigation />
                   <Routes>
-                      <Route path="/" element={<RecommendationButton />} />
-                      <Route path="/profiles" element={<ProfilesView/>} />
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/profiles" element={<ProfilePage/>} />
                       <Route path="/profiles/:id" element={<ProfileQueryHistoryTable id="644347f80f684f1a745f0d30" />}/>
                   </Routes>
               </div>
