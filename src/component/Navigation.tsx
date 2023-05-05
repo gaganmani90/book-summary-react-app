@@ -18,6 +18,7 @@ const Navigation: React.FC = () => {
                         window.location.href = "/profiles";
                     }}>Profile</Nav.Link>
                     <Nav.Link href="#">Book</Nav.Link>
+                    <Nav.Link href="/login">Login</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
             </Container>
